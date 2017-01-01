@@ -107,14 +107,16 @@ def detect(cam):
                             # drone.land()
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
-                                if w >= 140:
-                                    if 275 < cX < 365 and 135 < cY < 225:
+                                if w >= 130:
+                                    if 285 < cX < 355 and 135 < cY < 225:
                                         drone_movement.move_through_circle(drone)
                                         qr_value += 1
+                                        if qr_value == 3:
+                                            rect_found = False
 
                             else:
                                 print 'Not correct QR'
-                                if index_qr_tries % 17:
+                                if index_qr_tries % 7:
                                     rect_found = False
                                 index_qr_tries += 1
 

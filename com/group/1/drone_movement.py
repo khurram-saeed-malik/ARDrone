@@ -9,12 +9,12 @@ def drone_adjust(cX, cY, w, drone):
         sleep(0.5)
         drone.hover()
         sleep(1)
-    if 80 < w < 120:
+    if 80 < w < 110:
         drone.move_forward()
         sleep(0.4)
         drone.hover()
         sleep(1)
-    if 120 < w < 140:
+    if 110 < w < 130:
         drone.move_forward()
         sleep(0.3)
         drone.hover()
@@ -28,7 +28,7 @@ def move_through_circle(drone):
     drone.hover()
     sleep(0.5)
     drone.move_forward()
-    sleep(1.3)
+    sleep(1.5)
     drone.hover()
     sleep(1)
     drone.move_down()
@@ -41,7 +41,7 @@ def turn_right(drone):
     drone.hover()
     sleep(1)
     drone.turn_right()
-    sleep(0.3)
+    sleep(0.5)
     drone.turn_left()
     sleep(0.1)
     drone.hover()
