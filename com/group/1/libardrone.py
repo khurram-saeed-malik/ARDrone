@@ -318,7 +318,7 @@ def at(command, seq, params):
             param_str += ',"'+p+'"'
     msg = "AT*%s=%i%s\r" % (command, seq, param_str)
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.sendto(msg, ("192.168.1.3", ARDRONE_COMMAND_PORT))
+    sock.sendto(msg, ("192.168.1.1", ARDRONE_COMMAND_PORT))
 
 def f2i(f):
     """Interpret IEEE-754 floating-point value as signed integer.
