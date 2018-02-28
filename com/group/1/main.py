@@ -4,6 +4,15 @@ from time import sleep
 import cv2
 cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 running = True
+drone = libardrone.ARDrone()
+
+drone.takeoff()
+sleep(3)
+drone.hover()
+sleep(5)
+drone.land()
+sleep(3)
+drone.halt()
 while running:
     # get current frame of video
     running, frame = cam.read()
@@ -71,20 +80,10 @@ while running:
     cv2.putText(frame, status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                 (0, 0, 255), 2)
 
+
     # show the frame and record if a key is pressed
     cv2.imshow("Frame", frame)
     key = cv2.waitKey(1) & 0xFF
 
 cam.release()
 cv2.destroyAllWindows()
-
-drone = libardrone.ARDrone()
-
-drone.takeoff()
-sleep(3)
-drone.hover()
-sleep(5)
-drone.land()
-sleep(3)
-drone.halt()
-

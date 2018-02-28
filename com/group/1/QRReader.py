@@ -2,7 +2,8 @@ import sys
 sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
 #sys.path.insert(0, 'C:\Python\Lib\site-packages')
 import zbar
-
+import libardrone
+from time import sleep
 from PIL import Image
 import cv2
 
@@ -15,6 +16,15 @@ def main():
         print "QRReader: Capture success!"
     except:
         print "QRReader: Failed!"
+
+    drone = libardrone.ARDrone()
+
+    drone.takeoff()
+    sleep(3)
+
+    drone.hover()
+
+
 
     while True:
         # To quit this program press q.
@@ -44,6 +54,11 @@ def main():
         # Prints data from image.
         for decoded in zbar_image:
             print(decoded.data)
+            if(decoded.data == 'P.03'):
+                drone.land()
+                sleep(3)
+                drone.halt()
+
 
 
 if __name__ == "__main__":
