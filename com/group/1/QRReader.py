@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
+#sys.path.insert(0, 'C:\Python\Lib\site-packages')
 import zbar
 
 from PIL import Image
@@ -5,14 +8,6 @@ import cv2
 
 
 def main():
-    """
-    A simple function that captures webcam video utilizing OpenCV. The video is then broken down into frames which
-    are constantly displayed. The frame is then converted to grayscale for better contrast. Afterwards, the image
-    is transformed into a numpy array using PIL. This is needed to create zbar image. This zbar image is then scanned
-    utilizing zbar's image scanner and will then print the decodeed message of any QR or bar code. To quit the program,
-    press "q".
-    :return:
-    """
 
     try:
         capture = cv2.VideoCapture()
