@@ -31,7 +31,6 @@ stream.
 import pygame
 
 import libardrone
-import Image
 
 
 def main():
