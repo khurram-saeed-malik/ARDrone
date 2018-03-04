@@ -1,31 +1,18 @@
 import sys
+
 sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
-#sys.path.insert(0, 'C:\Python\Lib\site-packages')
+# sys.path.insert(0, 'C:\Python\Lib\site-packages')
 import zbar
-import libardrone
-from time import sleep
 from PIL import Image
 import cv2
 
 
-def main():
-    capture = cv2.VideoCapture()
-    if not capture.open('tcp://192.168.1.1:5555'):
-        print "Failed"
-
-    drone = libardrone.ARDrone()
-
-    drone.takeoff()
-    sleep(3)
-
-    drone.hover()
-
+# to use this method: reader = QRReader.qr_reader(cam, drone)
+def qr_reader(capture, drone):
     while True:
-        # To quit this program press q.
+        # To quit this program & land drone press q
         if cv2.waitKey(1) & 0xFF == ord('q'):
             drone.land()
-            sleep(3)
-            drone.halt()
             break
 
         # Breaks down the video into frames
@@ -40,7 +27,6 @@ def main():
         # Uses PIL to convert the grayscale image into a ndary array that ZBar can understand.
         image = Image.fromarray(gray)
 
-
         width, height = image.size
         zbar_image = zbar.Image(width, height, 'Y800', image.tobytes())
 
@@ -50,12 +36,13 @@ def main():
 
         # Prints data from image.
         for decoded in zbar_image:
-            print(decoded.data)
-            if(decoded.data == 'P.05'):
-                drone.land()
-                sleep(3)
-                drone.halt()
-                break
+            print("QR: " + decoded.data)
+            return decoded.data
 
-if __name__ == "__main__":
-    main()
+
+class QRReader(object):
+    #    capture = cv2.VideoCapture()
+    #    if not capture.open('tcp://192.168.1.1:5555'):
+    #        print "QRReader: Failed to capture from from drone"
+    def __init__(self):
+        print("QRReader: Class loaded")
