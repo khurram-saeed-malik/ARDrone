@@ -7,7 +7,6 @@ from PIL import Image
 import cv2
 
 
-# to use this method: reader = QRReader.qr_reader(cam, drone)
 def qr_reader(capture, drone):
     while True:
         # To quit this program & land drone press q

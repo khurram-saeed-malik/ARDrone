@@ -1,18 +1,35 @@
-import libardrone
 from time import sleep
+import sys
 
+sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
+# sys.path.insert(0, 'C:\Python\Lib\site-packages')
+import zbar
 import cv2
+from PIL import Image
+
+import libardrone
+
 cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 running = True
 drone = libardrone.ARDrone()
 
-drone.takeoff()
-sleep(3)
-drone.hover()
-sleep(5)
-drone.land()
-sleep(3)
-drone.halt()
+
+def qr_reader(greyscale_img):
+    image = Image.fromarray(greyscale_img)
+
+    width, height = image.size
+    zbar_image = zbar.Image(width, height, 'Y800', image.tobytes())
+
+    # Scans the zbar image.
+    scanner = zbar.ImageScanner()
+    scanner.scan(zbar_image)
+
+    # Prints data from image.
+    for decoded in zbar_image:
+        print("QR returned: " + decoded.data)
+        return decoded.data
+
+
 while running:
     # get current frame of video
     running, frame = cam.read()
@@ -33,6 +50,10 @@ while running:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (7, 7), 0)
     edged = cv2.Canny(blurred, 50, 150)
+
+    # QRReader method
+    qr_reader(gray)
+    # Uses PIL to convert the grayscale image into a ndary array that ZBar can understand.
 
     (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
