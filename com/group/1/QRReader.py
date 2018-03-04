@@ -9,13 +9,9 @@ import cv2
 
 
 def main():
-
-    try:
-        capture = cv2.VideoCapture()
-        capture.open('tcp://192.168.1.1:5555')
-        print "QRReader: Capture success!"
-    except:
-        print "QRReader: Failed!"
+    capture = cv2.VideoCapture()
+    if not capture.open('tcp://192.168.1.1:5555'):
+        print "Failed"
 
     drone = libardrone.ARDrone()
 
@@ -24,11 +20,12 @@ def main():
 
     drone.hover()
 
-
-
     while True:
         # To quit this program press q.
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            drone.land()
+            sleep(3)
+            drone.halt()
             break
 
         # Breaks down the video into frames
@@ -54,12 +51,11 @@ def main():
         # Prints data from image.
         for decoded in zbar_image:
             print(decoded.data)
-            if(decoded.data == 'P.03'):
+            if(decoded.data == 'P.05'):
                 drone.land()
                 sleep(3)
                 drone.halt()
-
-
+                break
 
 if __name__ == "__main__":
     main()
