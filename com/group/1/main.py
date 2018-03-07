@@ -2,7 +2,7 @@ import sys
 
 sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
 # sys.path.insert(0, 'C:\Python\Lib\site-packages')
-
+#sys.path.insert(0, '/home/bf/.local/lib/python2.7/site-packages')
 import zbar
 import cv2
 from PIL import Image
