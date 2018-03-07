@@ -30,7 +30,7 @@ stream.
 
 import pygame
 
-import libardrone
+from lib import libardrone
 
 
 def main():
