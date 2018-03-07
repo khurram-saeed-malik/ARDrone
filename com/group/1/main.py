@@ -2,6 +2,7 @@ import sys
 
 sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
 # sys.path.insert(0, 'C:\Python\Lib\site-packages')
+
 import zbar
 import cv2
 from PIL import Image
@@ -35,7 +36,6 @@ while running:
     blurred = cv2.GaussianBlur(gray, (7, 7), 0)
     edged = cv2.Canny(blurred, 50, 150)
 
-    # QRReader method
     qr_reader.read(gray)
 
     (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
