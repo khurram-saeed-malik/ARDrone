@@ -1,12 +1,10 @@
-import libardrone
 from time import sleep
 
 import cv2
 import numpy as np
 
-cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
+cam = cv2.VideoCapture(0)
 running = True
-drone = libardrone.ARDrone()
 
 while running:
     # get current frame of video
@@ -31,7 +29,7 @@ while running:
     output = frame.copy()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # apply GuassianBlur to reduce noise. medianBlur is also added for smoothening, reducing noise.
-    gray = cv2.GaussianBlur(gray, (5, 5), 0);
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
     gray = cv2.medianBlur(gray, 5)
 
     # Adaptive Guassian Threshold is to detect sharp edges in the Image. For more information Google it.
