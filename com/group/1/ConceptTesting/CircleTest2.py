@@ -22,6 +22,9 @@ while(1):
 
     countours,_ = cv2.findContours(thresh, cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
 
+
+
+
     for cnt in countours:
         area = cv2.contourArea(cnt)
         if area > max_area:
