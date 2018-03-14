@@ -1,18 +1,16 @@
+# coding=utf-8
 import sys
-
+import numpy as np
 sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
 # sys.path.insert(0, 'C:\Python\Lib\site-packages')
 #sys.path.insert(0, '/home/bf/.local/lib/python2.7/site-packages')
-import zbar
 import cv2
-from PIL import Image
 
 from lib import libardrone
 import QRReader
 
 cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 running = True
-drone = libardrone.ARDrone()
 qr_reader = QRReader
 
 while running:
@@ -22,8 +20,8 @@ while running:
 
     if running:
         cv2.imshow('frame', frame)
-        if cv2.waitKey(1) & 0xFF == 27:
-            # escape key pressed
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            # when 'q' key pressed
             running = False
     else:
         # error reading frame
@@ -33,21 +31,27 @@ while running:
         break
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    #cv2.imwrite("pic1_grascayle.png", gray)
+# Hvad bruger vi dem til?:
     blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+    #cv2.imwrite("pic2_blurred.png", blurred)
     edged = cv2.Canny(blurred, 50, 150)
+    #cv2.imwrite("pic3_edged.png", edged)
+    #print 'DONE TAKING IMAGES'
 
     qr_reader.read(gray)
 
-    (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    # Hvad finder den helt præcist?
+    (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-    # loop over the contours
+    # loop over the contours , Hvordan skal den forstås?
     for c in cnts:
         # approximate the contour
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.01 * peri, True)
 
         # ensure that the approximated contour is "roughly" rectangular
-        if len(approx) >= 4 and len(approx) <= 6:
+        if 4 <= len(approx) <= 6:
             # compute the bounding box of the approximated contour and
             # use the bounding box to compute the aspect ratio
             (x, y, w, h) = cv2.boundingRect(approx)
@@ -83,7 +87,6 @@ while running:
     # draw the status text on the frame
     cv2.putText(frame, status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                 (0, 0, 255), 2)
-
 
     # show the frame and record if a key is pressed
     cv2.imshow("Frame", frame)
