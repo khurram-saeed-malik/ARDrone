@@ -27,7 +27,13 @@ while running:
 
 
     output = frame.copy()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    # Convert BGR to HSV
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    # define range of blue color in HSV
+    lower_blue = np.array([0, 150, 100])
+    upper_blue = np.array([15, 255, 255])
+    gray = cv2.cvtColor(hsv, cv2.COLOR_BGR2GRAY)
     # apply GuassianBlur to reduce noise. medianBlur is also added for smoothening, reducing noise.
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
     gray = cv2.medianBlur(gray, 5)
