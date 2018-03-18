@@ -1,6 +1,7 @@
 import cv2
 import numpy
 
+
 # http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_houghcircles/py_houghcircles.html
 # cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 
@@ -20,6 +21,9 @@ def main():
     cv2.imshow('detected circles', cimage)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+    # TODO: Detect circles with only red boundaries
+
 
 
 if __name__ == '__main__':
