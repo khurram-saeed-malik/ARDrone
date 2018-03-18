@@ -23,7 +23,7 @@ while running:
     if not running:
         break
 
-    bilateral_filtered_image = cv2.bilateralFilter(frame, 5, 175, 175)
+    bilateral_filtered_image = cv2.bilatealralFilter(frame, 5, 175, 175)
 
     edge_detected_image = cv2.Canny(bilateral_filtered_image, 75, 200)
 
