@@ -23,7 +23,7 @@ while running:
     if not running:
         break
 
-    bilateral_filtered_image = cv2.bilatealralFilter(frame, 5, 175, 175)
+    bilateral_filtered_image = cv2.bilateralFilter(frame, 5, 175, 175)
 
     edge_detected_image = cv2.Canny(bilateral_filtered_image, 75, 200)
 
@@ -58,7 +58,7 @@ while running:
 
 
         # detect circles in the image
-    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 260, param1=30, param2=65, minRadius=0, maxRadius=0)
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 0.5, 260, param1=30, param2=65, minRadius=0, maxRadius=0)
         # print circles
 
         # ensure at least some circles were found
@@ -70,12 +70,13 @@ while running:
         for (x, y, r) in circles:
                 # draw the circle in the output image, then draw a rectangle in the image
                 # corresponding to the center of the circle
-            cv2.circle(gray, (x, y), r, (0, 0, 255), 4)
-            cv2.rectangle(gray, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+            cv2.circle(frame, (x, y), r, (0, 0, 255), 4)
+            cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
                 # time.sleep(0.5)
 
             # Display the resulting frame
-            cv2.imshow('gray', gray)
-            cv2.imshow('woop', output)
+            # cv2.imshow('gray', gray)
+            # cv2.imshow('woop', output)
+            cv2.imshow("frame", frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
