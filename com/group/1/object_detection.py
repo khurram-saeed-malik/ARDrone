@@ -30,8 +30,6 @@ def detect(cam):
         # cv2.imwrite("pic3_edged.png", edged)
         # print 'DONE TAKING IMAGES'
 
-        qr_reader.read(gray)
-
         # Hvad finder den helt præcist?
         (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
@@ -64,7 +62,10 @@ def detect(cam):
                     # draw an outline around the target and update the status
                     # text
                     cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
-                    status = "Target(s) Acquired"
+                    status = "Found rectangle(s)"
+
+                    # detect qr
+                    qr_reader.read(gray)
 
                     # compute the center of the contour region and draw the
                     # crosshairs
