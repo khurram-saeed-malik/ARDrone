@@ -1,18 +1,32 @@
 # coding=utf-8
+from time import sleep
+from lib import libardrone
+import QRReader
+import cv2
+
+drone = libardrone.ARDrone()
+
+
 def detect(cam):
-    import QRReader
-    import cv2
-    qr_reader = QRReader
+    # qr_reader = QRReader
     running = True
+
+    drone.takeoff()
+    sleep(3)
+
     while running:
         # get current frame of video
         running, frame = cam.read()
         status = "No Targets"
+        qr_status = "No QR"
 
         if running:
-            cv2.imshow('frame', frame)
+
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 # when 'q' key pressed
+                print("landing")
+                drone.land()
+                sleep(3)
                 running = False
         else:
             # error reading frame
@@ -62,10 +76,23 @@ def detect(cam):
                     # draw an outline around the target and update the status
                     # text
                     cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
-                    status = "Found rectangle(s)"
+                    status = "Found square(s)"
+
+                    print(x, y, w, h)
+
+
+                    if w > 85:
+
+                        drone.land()
+
+                    else:
+                        drone.move_forward()
+                        sleep(1)
+                        drone.hover()
+                        sleep(5)
 
                     # detect qr
-                    qr_reader.read(gray)
+                    # qr_reader.read(gray)
 
                     # compute the center of the contour region and draw the
                     # crosshairs
@@ -77,7 +104,7 @@ def detect(cam):
                     cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
 
         # draw the status text on the frame
-        cv2.putText(frame, status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+        cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     (0, 0, 255), 2)
 
         # show the frame and record if a key is pressed
