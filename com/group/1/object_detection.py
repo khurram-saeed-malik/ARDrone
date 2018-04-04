@@ -1,8 +1,9 @@
 # coding=utf-8
 from time import sleep
 from lib import libardrone
-import QRReader
 import cv2
+import re
+import QRReader as qr_reader
 
 drone = libardrone.ARDrone()
 
@@ -26,7 +27,6 @@ def detect(cam):
                 # when 'q' key pressed
                 print("landing")
                 drone.land()
-                sleep(3)
                 running = False
         else:
             # error reading frame
@@ -44,10 +44,9 @@ def detect(cam):
         # cv2.imwrite("pic3_edged.png", edged)
         # print 'DONE TAKING IMAGES'
 
-        # Hvad finder den helt præcist?
         (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
-        # loop over the contours , Hvordan skal den forstås?
+        # loop over the contours
         for c in cnts:
             # approximate the contour
             peri = cv2.arcLength(c, True)
@@ -58,21 +57,21 @@ def detect(cam):
                 # compute the bounding box of the approximated contour and
                 # use the bounding box to compute the aspect ratio
                 (x, y, w, h) = cv2.boundingRect(approx)
-                aspectRatio = w / float(h)
+                aspect_ratio = w / float(h)
 
                 # compute the solidity of the original contour
                 area = cv2.contourArea(c)
-                hullArea = cv2.contourArea(cv2.convexHull(c))
-                solidity = area / float(hullArea)
+                hull_area = cv2.contourArea(cv2.convexHull(c))
+                solidity = area / float(hull_area)
 
                 # compute whether or not the width and height, solidity, and
                 # aspect ratio of the contour falls within appropriate bounds
-                keepDims = w > 25 and h > 25
-                keepSolidity = solidity > 0.9
-                keepAspectRatio = aspectRatio >= 0.8 and aspectRatio <= 1.2
+                keep_dims = w > 25 and h > 25
+                keep_solidity = solidity > 0.9
+                keep_aspect_ratio = aspect_ratio >= 0.8 and aspect_ratio <= 1.2
 
                 # ensure that the contour passes all our tests
-                if keepDims and keepSolidity and keepAspectRatio:
+                if keep_dims and keep_solidity and keep_aspect_ratio:
                     # draw an outline around the target and update the status
                     # text
                     cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
@@ -80,22 +79,20 @@ def detect(cam):
 
                     print(x, y, w, h)
 
+                    # detect qr
+                    qr = qr_reader.read(gray)
+                    match = re.search('P\.\d{2}', qr)
+                    if match:
+                        print 'found QR: ', match.group()  # found a qr code
+                        # todo: logic for different qr codes
 
-                    if w > 85:
-
-                        drone.land()
+                        if qr == 'P.01' and w > 130:
+                            drone.land()
 
                     else:
-                        drone.move_forward()
-                        sleep(1)
-                        drone.hover()
-                        sleep(5)
+                        print 'rectangle is not a QR'
 
-                    # detect qr
-                    # qr_reader.read(gray)
-
-                    # compute the center of the contour region and draw the
-                    # crosshairs
+                    # compute the center of the contour region and draw the crossbars
                     M = cv2.moments(approx)
                     (cX, cY) = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
                     (startX, endX) = (int(cX - (w * 0.15)), int(cX + (w * 0.15)))
@@ -107,9 +104,8 @@ def detect(cam):
         cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                     (0, 0, 255), 2)
 
-        # show the frame and record if a key is pressed
+        # show the frame
         cv2.imshow("Frame", frame)
-        key = cv2.waitKey(1) & 0xFF
 
     cam.release()
     cv2.destroyAllWindows()
