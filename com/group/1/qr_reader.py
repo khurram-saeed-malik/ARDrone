@@ -1,6 +1,6 @@
 import sys
-
-sys.path.insert(0, '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages')
+sys.path.insert(0, '/usr/local/lib/python2.7/site-packages')
+#sys.path.insert(0, '/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages')
 # sys.path.insert(0, 'C:\Python\Lib\site-packages')
 # /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages
 import zbar
@@ -21,11 +21,7 @@ def read(greyscale_img):
 
     # Prints data from image.
     for decoded in zbar_image:
-        print("QR returned: " + decoded.data)
-        qr_status = "QR: " + decoded.data
-
-        return decoded.data, qr_status
-
+        return decoded.data[:4]
 
 
 def qr_readerDEPRECATED(capture, drone):
