@@ -5,7 +5,7 @@ import cv2
 import re
 import qr_reader
 
-#drone = libardrone.ARDrone()
+drone = libardrone.ARDrone()
 
 
 def detect(cam):
@@ -13,8 +13,7 @@ def detect(cam):
     # qr_reader = QRReader
     running = True
 
-    # drone.takeoff()
-    # sleep(3)
+    #drone.takeoff()
 
     while running:
         # get current frame of video
@@ -26,8 +25,8 @@ def detect(cam):
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 # when 'q' key pressed
-                #print("landing")
-                #drone.land()
+                print("landing")
+                drone.land()
                 running = False
         else:
             # error reading frame
@@ -88,7 +87,17 @@ def detect(cam):
                         # drone.land()
                         if qr == 'P.0'+repr(qr_value):
                             print('Correct QR, value is P.0'+repr(qr_value))
-                            qr_value += 1
+                            # drone.speed = 0.5
+                            # drone.move_up()
+                            # sleep(1.5)
+                            # drone.speed = 0.2
+                            # drone.move_forward()
+                            # sleep(3)
+                            # drone.hover()
+                            # sleep(1)
+                            # drone.land()
+                            # sleep(3)
+                            # qr_value += 1
                         else:
                             print 'Not correct QR'
 

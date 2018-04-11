@@ -19,11 +19,12 @@ def main():
         cv2.circle(cimage, (i[0], i[1]), 2, (0, 0, 255), 3)
 
     cv2.imshow('detected circles', cimage)
+    cv2.resizeWindow('image', 600, 600)
+
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
     # TODO: Detect circles with only red boundaries
-
 
 
 if __name__ == '__main__':
