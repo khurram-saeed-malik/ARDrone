@@ -13,7 +13,7 @@ def detect(cam):
     # qr_reader = QRReader
     running = True
 
-    #drone.takeoff()
+    drone.takeoff()
 
     while running:
         # get current frame of video
@@ -27,6 +27,8 @@ def detect(cam):
                 # when 'q' key pressed
                 print("landing")
                 drone.land()
+                sleep(3)
+                drone.reset()
                 running = False
         else:
             # error reading frame
@@ -90,16 +92,21 @@ def detect(cam):
                         if qr == 'P.0'+repr(qr_value):
                             print('Correct QR, value is P.0'+repr(qr_value))
 
-                            # drone.speed = 0.5
-                            # drone.move_up()
-                            # sleep(1.5)
-                            # drone.speed = 0.2
-                            # drone.move_forward()
-                            # sleep(3)
-                            # drone.hover()
-                            # sleep(1)
-                            # drone.land()
-                            # sleep(3)
+                            drone.speed = 0.5
+                            drone.move_up()
+                            sleep(1.5)
+                            drone.speed = 0.2
+                            drone.move_forward()
+                            sleep(3)
+                            drone.hover()
+                            sleep(1)
+                            drone.move_backward()
+                            sleep(3)
+                            drone.hover(1)
+                            drone.land()
+                            sleep(5)
+                            drone.reset()
+
                             # qr_value += 1
                         else:
                             print 'Not correct QR'

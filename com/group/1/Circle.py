@@ -6,7 +6,7 @@ import numpy
 # cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 
 def main():
-    image = cv2.imread("Circles.png", 0)
+    image = cv2.imread("circle.png", 0)
     image = cv2.medianBlur(image, 5)
     cimage = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
 
