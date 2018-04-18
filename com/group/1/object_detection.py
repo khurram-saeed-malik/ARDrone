@@ -66,7 +66,7 @@ def detect(cam):
 
                 # compute whether or not the width and height, solidity, and
                 # aspect ratio of the contour falls within appropriate bounds
-                keep_dims = w > 25 and h > 25
+                keep_dims = w > 15 and h > 15
                 keep_solidity = solidity > 0.9
                 keep_aspect_ratio = aspect_ratio <= 0.8 and aspect_ratio >= 0.5
 
@@ -77,6 +77,7 @@ def detect(cam):
                     cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
                     status = "Found square(s)"
 
+                    print(x, y, w, h)
 
                     # todo move right or left | turn right or left | go down or up
 
@@ -88,7 +89,7 @@ def detect(cam):
                         # drone.land()
                         if qr == 'P.0'+repr(qr_value):
                             print('Correct QR, value is P.0'+repr(qr_value))
-                            print(x, y, w, h)
+
                             # drone.speed = 0.5
                             # drone.move_up()
                             # sleep(1.5)
