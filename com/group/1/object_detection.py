@@ -9,7 +9,7 @@ drone = libardrone.ARDrone()
 
 
 def detect(cam):
-    qr_value = 1
+    qr_value = 5
     # qr_reader = QRReader
     running = True
 
@@ -68,7 +68,7 @@ def detect(cam):
                 # aspect ratio of the contour falls within appropriate bounds
                 keep_dims = w > 25 and h > 25
                 keep_solidity = solidity > 0.9
-                keep_aspect_ratio = aspect_ratio >= 0.8 and aspect_ratio <= 1.2
+                keep_aspect_ratio = aspect_ratio <= 0.8 and aspect_ratio >= 0.5
 
                 # ensure that the contour passes all our tests
                 if keep_dims and keep_solidity and keep_aspect_ratio:
@@ -77,7 +77,8 @@ def detect(cam):
                     cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
                     status = "Found square(s)"
 
-                    print(x, y, w, h)
+
+                    # todo move right or left | turn right or left | go down or up
 
                     # detect qr
                     qr = qr_reader.read(gray)
@@ -87,6 +88,7 @@ def detect(cam):
                         # drone.land()
                         if qr == 'P.0'+repr(qr_value):
                             print('Correct QR, value is P.0'+repr(qr_value))
+                            print(x, y, w, h)
                             # drone.speed = 0.5
                             # drone.move_up()
                             # sleep(1.5)
