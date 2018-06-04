@@ -4,12 +4,13 @@ from lib import libardrone
 import cv2
 import re
 import qr_reader
+import center_drone
 
 drone = libardrone.ARDrone()
 
 
 def detect(cam):
-    qr_value = 5
+    qr_value = 0
     # qr_reader = QRReader
     running = True
 
@@ -92,20 +93,20 @@ def detect(cam):
                         if qr == 'P.0'+repr(qr_value):
                             print('Correct QR, value is P.0'+repr(qr_value))
 
-                            drone.speed = 0.5
-                            drone.move_up()
-                            sleep(1.5)
-                            drone.speed = 0.2
-                            drone.move_forward()
-                            sleep(3)
-                            drone.hover()
-                            sleep(1)
-                            drone.move_backward()
-                            sleep(3)
-                            drone.hover(1)
-                            drone.land()
-                            sleep(5)
-                            drone.reset()
+                            # drone.speed = 0.5
+                            # drone.move_up()
+                            # sleep(1.5)
+                            # drone.speed = 0.2
+                            # drone.move_forward()
+                            # sleep(3)
+                            # drone.hover()
+                            # sleep(1)
+                            # drone.move_backward()
+                            # sleep(3)
+                            # drone.hover(1)
+                            # drone.land()
+                            # sleep(5)
+                            # drone.reset()
 
                             # qr_value += 1
                         else:
@@ -121,6 +122,9 @@ def detect(cam):
                     (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
                     cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
                     cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
+                    centerX = (startX+endX)/2
+                    centerY = (startY+endY)/2
+                    center_drone.allign(centerX, centerY, w, h)
 
         # draw the status text on the frame
         cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
