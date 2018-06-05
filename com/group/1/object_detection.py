@@ -9,17 +9,13 @@ import center_drone
 drone = libardrone.ARDrone()
 
 
-def detect(cam):
+def detect(cam, count):
     qr_value = 5
-    # qr_reader = QRReader
-    running = True
-
+    running, frame = cam.read()
     if not drone.takeoff():
         drone.takeoff()
 
     while running:
-        # get current frame of video
-        running, frame = cam.read()
         status = "No Targets"
         qr_status = "No QR"
 
@@ -120,6 +116,21 @@ def detect(cam):
                     centerX = (startX + endX) / 2
                     centerY = (startY + endY) / 2
                     center_drone.allign(drone, centerX, centerY, w, h)
+
+                else:
+
+                    if count != 0:
+                        drone.hover()
+                        sleep(3)
+                        print('No rectangle found - turning around')
+                        drone.turn_right()
+                        sleep(0.5)
+                        drone.hover()
+                        sleep(2)
+                        return detect(cam, count - 1)
+                    else:
+                        drone.land()
+                        drone.halt()
 
         # draw the status text on the frame
         cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,

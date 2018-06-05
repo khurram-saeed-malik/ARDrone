@@ -8,7 +8,7 @@
 
 # Detektere cirkler eller andre former for geometri
 
-# Reagearer på daqqqqqqqqqqqqta
+# Reagearer på data
 
 import cv2
 
@@ -19,7 +19,7 @@ cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 
 # main method declaration
 def main():
-    object_detection.detect(cam)
+    object_detection.detect(cam, 5)
 
 
 # main method entry point
