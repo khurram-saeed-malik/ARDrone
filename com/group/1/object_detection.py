@@ -1,21 +1,17 @@
 # coding=utf-8
-from time import sleep
-from lib import libardrone
+
 import cv2
 import re
 import qr_reader
 import center_drone
+from time import sleep
 
-drone = libardrone.ARDrone()
 
-
-def detect(cam, count):
-    qr_value = 5
-    running, frame = cam.read()
-    if not drone.takeoff():
-        drone.takeoff()
-
+def detect(cam, drone, count):
+    qr_value = 4
+    running = True
     while running:
+        running, frame = cam.read()
         status = "No Targets"
         qr_status = "No QR"
 
@@ -25,8 +21,10 @@ def detect(cam, count):
                 # when 'q' key pressed
                 print("landing")
                 drone.land()
-                sleep(5)
+                drone.halt()
                 running = False
+                cam.release()
+                cv2.destroyAllWindows()
         else:
             # error reading frame
             print 'error reading video feed'
@@ -73,8 +71,6 @@ def detect(cam, count):
 
                     print(x, y, w, h)
 
-                    # todo move right or left | turn right or left | go down or up
-
                     # detect qr
                     qr = qr_reader.read(gray)
                     match = re.search(r'P\.\d{2}', str(qr))
@@ -98,7 +94,11 @@ def detect(cam, count):
                             # drone.land()
                             # sleep(5)
                             # drone.reset()
-
+                            drone.land()
+                            drone.halt()
+                            cam.release()
+                            cv2.destroyAllWindows()
+                            running = False
                             # qr_value += 1
                         else:
                             print 'Not correct QR'
@@ -115,29 +115,32 @@ def detect(cam, count):
                     cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
                     centerX = (startX + endX) / 2
                     centerY = (startY + endY) / 2
-                    center_drone.allign(drone, centerX, centerY, w, h)
+                    # center_drone.allign(drone, centerX, centerY, w, h)
+                    # todo move right or left | turn right or left | go down or up
+                    # draw the status text on the frame
+                    cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                                (0, 0, 255), 2)
+
+                    # show the frame
+                    cv2.imshow("Frame", frame)
 
                 else:
-
                     if count != 0:
-                        drone.hover()
-                        sleep(3)
+                        cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                        # show the frame
+                        cv2.imshow("Frame", frame)
                         print('No rectangle found - turning around')
                         drone.turn_right()
                         sleep(0.5)
                         drone.hover()
-                        sleep(2)
-                        return detect(cam, count - 1)
+                        sleep(3)
+                        return detect(cam, drone, count - 1)
                     else:
                         drone.land()
                         drone.halt()
-
-        # draw the status text on the frame
-        cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                    (0, 0, 255), 2)
-
-        # show the frame
-        cv2.imshow("Frame", frame)
+                        cam.release()
+                        cv2.destroyAllWindows()
+                        running = False
 
     cam.release()
     cv2.destroyAllWindows()

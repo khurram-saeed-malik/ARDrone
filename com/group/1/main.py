@@ -9,17 +9,21 @@
 # Detektere cirkler eller andre former for geometri
 
 # Reagearer på data
-
+from lib import libardrone
+from time import sleep
 import cv2
 
 import object_detection
 
 cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
+drone = libardrone.ARDrone()
 
 
 # main method declaration
 def main():
-    object_detection.detect(cam, 5)
+    drone.takeoff()
+    sleep(3)
+    object_detection.detect(cam, drone, 5)
 
 
 # main method entry point
