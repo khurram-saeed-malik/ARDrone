@@ -1,6 +1,6 @@
 # coding=utf-8
 
-# Forbinde til dronen
+# Forbindelse til dronen
 
 # Modtage video optagelse
 
@@ -8,7 +8,7 @@
 
 # Detektere cirkler eller andre former for geometri
 
-# Reagearer på data
+# Reagearer på daqqqqqqqqqqqqta
 
 import cv2
 
@@ -17,10 +17,11 @@ import object_detection
 cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
 
 
+# main method declaration
 def main():
-
     object_detection.detect(cam)
 
 
+# main method entry point
 if __name__ == '__main__':
     main()

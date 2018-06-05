@@ -23,7 +23,6 @@ def read(greyscale_img):
     for decoded in zbar_image:
         return decoded.data[:4]
 
-
 def qr_readerDEPRECATED(capture, drone):
     while True:
         # To quit this program & land drone press q

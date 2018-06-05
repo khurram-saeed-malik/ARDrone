@@ -10,11 +10,12 @@ drone = libardrone.ARDrone()
 
 
 def detect(cam):
-    qr_value = 0
+    qr_value = 5
     # qr_reader = QRReader
     running = True
 
-    drone.takeoff()
+    if not drone.takeoff():
+        drone.takeoff()
 
     while running:
         # get current frame of video
@@ -28,8 +29,7 @@ def detect(cam):
                 # when 'q' key pressed
                 print("landing")
                 drone.land()
-                sleep(3)
-                drone.reset()
+                sleep(5)
                 running = False
         else:
             # error reading frame
@@ -39,13 +39,8 @@ def detect(cam):
             break
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # cv2.imwrite("pic1_grascayle.png", gray)
-        # Hvad bruger vi dem til?:
         blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-        # cv2.imwrite("pic2_blurred.png", blurred)
         edged = cv2.Canny(blurred, 50, 150)
-        # cv2.imwrite("pic3_edged.png", edged)
-        # print 'DONE TAKING IMAGES'
 
         (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
@@ -113,7 +108,7 @@ def detect(cam):
                             print 'Not correct QR'
 
                     else:
-                        print 'rectangle is not a QR'
+                        print 'No QR in rectangle'
 
                     # compute the center of the contour region and draw the crossbars
                     M = cv2.moments(approx)
