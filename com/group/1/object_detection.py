@@ -85,8 +85,8 @@ def detect(cam):
                     if match:
                         # todo: logic for different qr codes
                         # drone.land()
-                        if qr == 'P.0'+repr(qr_value):
-                            print('Correct QR, value is P.0'+repr(qr_value))
+                        if qr == 'P.0' + repr(qr_value):
+                            print('Correct QR, value is P.0' + repr(qr_value))
 
                             # drone.speed = 0.5
                             # drone.move_up()
@@ -117,9 +117,9 @@ def detect(cam):
                     (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
                     cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
                     cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
-                    centerX = (startX+endX)/2
-                    centerY = (startY+endY)/2
-                    center_drone.allign(centerX, centerY, w, h)
+                    centerX = (startX + endX) / 2
+                    centerY = (startY + endY) / 2
+                    center_drone.allign(drone, centerX, centerY, w, h)
 
         # draw the status text on the frame
         cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
