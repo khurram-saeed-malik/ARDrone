@@ -95,7 +95,7 @@ def detect(cam):
                             # sleep(1.5)
                             # drone.speed = 0.2
                             # drone.move_forward()
-                            # sleep(3)
+                            # sleep(3)gi
                             # drone.hover()
                             # sleep(1)
                             # drone.move_backward()
