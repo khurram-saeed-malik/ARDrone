@@ -31,6 +31,8 @@ def detect(cam):
                 drone.land()
                 sleep(5)
                 running = False
+                cam.release()
+                cv2.destroyAllWindows()
         else:
             # error reading frame
             print 'error reading video feed'
@@ -99,9 +101,9 @@ def detect(cam):
                             # drone.move_backward()
                             # sleep(3)
                             # drone.hover(1)
-                            # drone.land()
-                            # sleep(5)
-                            # drone.reset()
+                            drone.land()
+                            sleep(5)
+                            drone.reset()
 
                             # qr_value += 1
                         else:
@@ -119,7 +121,14 @@ def detect(cam):
                     cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
                     centerX = (startX+endX)/2
                     centerY = (startY+endY)/2
-                    center_drone.allign(centerX, centerY, w, h)
+                    #center_drone.allign(centerX, centerY, w, h)
+
+                if not keep_dims and not keep_solidity and not keep_aspect_ratio:
+                    drone.turn_right()
+                    sleep(0.3)
+                    drone.hover()
+                    sleep(3)
+
 
         # draw the status text on the frame
         cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
