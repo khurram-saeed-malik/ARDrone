@@ -1,36 +1,32 @@
 # coding=utf-8
-
+from time import sleep
 import cv2
 import re
 import qr_reader
 import center_drone
-from time import sleep
 
 
-def detect(cam, drone, count):
-    qr_value = 4
+def detect(cam, drone):
+    qr_value = 0
     running = True
     while running:
+        if not drone.takeoff():
+            drone.takeoff()
+        # get current frame of video
         running, frame = cam.read()
         status = "No Targets"
         qr_status = "No QR"
 
-        if running:
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                # when 'q' key pressed
-                print("landing")
-                drone.land()
-                drone.halt()
-                running = False
-                cam.release()
-                cv2.destroyAllWindows()
-        else:
-            # error reading frame
-            print 'error reading video feed'
-
-        if not running:
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            # when 'q' key pressed
+            print("landing")
+            drone.land()
+            drone.halt()
+            cam.release()
+            cv2.destroyAllWindows()
             break
+        if not cam.read():
+            print 'error reading video feed'
 
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (7, 7), 0)
@@ -71,6 +67,8 @@ def detect(cam, drone, count):
 
                     print(x, y, w, h)
 
+                    # todo move right or left | turn right or left | go down or up
+
                     # detect qr
                     qr = qr_reader.read(gray)
                     match = re.search(r'P\.\d{2}', str(qr))
@@ -98,13 +96,17 @@ def detect(cam, drone, count):
                             drone.halt()
                             cam.release()
                             cv2.destroyAllWindows()
-                            running = False
+                            break
                             # qr_value += 1
                         else:
                             print 'Not correct QR'
 
                     else:
                         print 'No QR in rectangle'
+                        drone.turn_right()
+                        sleep(0.3)
+                        drone.hover()
+                        sleep(3)
 
                     # compute the center of the contour region and draw the crossbars
                     M = cv2.moments(approx)
@@ -115,32 +117,19 @@ def detect(cam, drone, count):
                     cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
                     centerX = (startX + endX) / 2
                     centerY = (startY + endY) / 2
-                    # center_drone.allign(drone, centerX, centerY, w, h)
-                    # todo move right or left | turn right or left | go down or up
-                    # draw the status text on the frame
-                    cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                                (0, 0, 255), 2)
+                    # center_drone.allign(centerX, centerY, w, h)
 
-                    # show the frame
-                    cv2.imshow("Frame", frame)
+                drone.turn_right()
+                sleep(0.3)
+                drone.hover()
+                sleep(3)
 
-                else:
-                    if count != 0:
-                        cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-                        # show the frame
-                        cv2.imshow("Frame", frame)
-                        print('No rectangle found - turning around')
-                        drone.turn_right()
-                        sleep(0.5)
-                        drone.hover()
-                        sleep(3)
-                        return detect(cam, drone, count - 1)
-                    else:
-                        drone.land()
-                        drone.halt()
-                        cam.release()
-                        cv2.destroyAllWindows()
-                        running = False
+        # draw the status text on the frame
+        cv2.putText(frame, status + ", " + qr_status, (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    (0, 0, 255), 2)
+
+        # show the frame
+        cv2.imshow("Frame", frame)
 
     cam.release()
     cv2.destroyAllWindows()

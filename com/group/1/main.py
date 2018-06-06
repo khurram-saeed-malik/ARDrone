@@ -21,9 +21,7 @@ drone = libardrone.ARDrone()
 
 # main method declaration
 def main():
-    drone.takeoff()
-    sleep(3)
-    object_detection.detect(cam, drone, 5)
+    object_detection.detect(cam, drone)
 
 
 # main method entry point
