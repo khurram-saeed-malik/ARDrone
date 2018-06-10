@@ -7,23 +7,22 @@ import capture
 import object_detection
 
 drone = libardrone.ARDrone()
-
-cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
+# 'tcp://192.168.1.1:5555'
+cam = cv2.VideoCapture(0)
 
 
 # main method declaration
 def main():
-    # try:
-    #     thread.start_new_thread(video(), ())
-    #     thread.start_new_thread(flying(), ())
-    # except:
-    #     print 'Error> Unable to start threads..'
-    flying()
+    try:
+        thread.start_new_thread(flying(), ())
+        thread.start_new_thread(video(), ())
+    except:
+        print 'Error> Unable to start threads..'
 
 
 def flying():
-    drone.takeoff()
-    sleep(4)
+    #drone.takeoff()
+    #sleep(4)
     object_detection.detect(cam, drone, 10)
 
 

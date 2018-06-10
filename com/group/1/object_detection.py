@@ -8,10 +8,8 @@ from time import sleep
 
 def detect(cam, drone, count):
     qr_value = 4
-    frame = cam.read()
+    frame = cam.read()[1]
     # error reading frame
-    if not cam.read():
-        print 'Problem reading cam feed'
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     blurred = cv2.GaussianBlur(gray, (7, 7), 0)
