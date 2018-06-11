@@ -36,10 +36,11 @@ while running:
         if ((len(approx) > 8) & (len(approx) < 23) & (area > 30)):
             contour_list.append(contour)
 
-    cv2.drawContours(frame, contour_list, -1, (255, 0, 0), 2)
+    cv2.drawContours(bilateral_filtered_image, contour_list, -1, (255, 0, 0), 2)
     cv2.imshow('Objects Detected', bilateral_filtered_image)
+    cv2.imshow('edge', edge_detected_image)
 
-    output = edge_detected_image
+    output = frame
     gray = cv2.cvtColor(bilateral_filtered_image, cv2.COLOR_BGR2GRAY)
     # apply GuassianBlur to reduce noise. medianBlur is also added for smoothening, reducing noise.
     gray = cv2.GaussianBlur(gray, (5, 5), 0)
@@ -58,7 +59,7 @@ while running:
 
 
         # detect circles in the image
-    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 0.5, 260, param1=30, param2=65, minRadius=0, maxRadius=0)
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 1, 400, param1=30, param2=65, minRadius=10, maxRadius=0)
         # print circles
 
         # ensure at least some circles were found

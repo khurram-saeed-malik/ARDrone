@@ -74,7 +74,7 @@ while running:
 
 
         # detect circles in the image
-    circles = cv2.HoughCircles(mask, cv2.HOUGH_GRADIENT, 1, 260, param1=30, param2=65, minRadius=0, maxRadius=0)
+    circles = cv2.HoughCircles(gray, cv2.HOUGH_GRADIENT, 10, 260, param1=30, param2=65, minRadius=0, maxRadius=0)
         # print circles
 
         # ensure at least some circles wedge_detected_imageere found
@@ -86,8 +86,8 @@ while running:
         for (x, y, r) in circles:
                 # draw the circle in the output image, then draw a rectangle in the image
                 # corresponding to the center of the circle
-            cv2.circle(edge_detected_image, (x, y), r, (0, 255, 0), 4)
-            cv2.rectangle(edge_detected_image, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
+            cv2.circle(frame, (x, y), r, (0, 255, 0), 4)
+            cv2.rectangle(frame, (x - 5, y - 5), (x + 5, y + 5), (0, 128, 255), -1)
                 # time.sleep(0.5)
 
             # Display the resulting frame

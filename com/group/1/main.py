@@ -1,26 +1,35 @@
 # coding=utf-8
-
-# Forbinde til dronen
-
-# Modtage video optagelse
-
-# Behandle QR kode
-
-# Detektere cirkler eller andre former for geometri
-
-# Reagearer på data
-
+from time import sleep
+import thread
 import cv2
-
+from lib import libardrone
+import capture
 import object_detection
 
-cam = cv2.VideoCapture('tcp://192.168.1.1:5555')
+drone = libardrone.ARDrone()
+# 'tcp://192.168.1.1:5555'
+cam = cv2.VideoCapture(0)
 
 
+# main method declaration
 def main():
+    try:
+        thread.start_new_thread(flying(), ())
+        thread.start_new_thread(video(), ())
+    except:
+        print 'Error> Unable to start threads..'
 
-    object_detection.detect(cam)
+
+def flying():
+    #drone.takeoff()
+    #sleep(4)
+    object_detection.detect(cam, drone, 10)
 
 
+def video():
+    capture.video_feed(cam, drone)
+
+
+# main method entry point
 if __name__ == '__main__':
     main()
