@@ -11,7 +11,7 @@ drone = libardrone.ARDrone()
 
 def detect(cam):
     index = 1
-    qr_value = 5
+    qr_value = 4
     drone.takeoff()
     sleep(3)
     running = True
@@ -82,6 +82,15 @@ def detect(cam):
 
                         # todo move right or left | turn right or left | go down or up
 
+                        # compute the center of the contour region and draw the crossbars
+                        M = cv2.moments(approx)
+                        (cX, cY) = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+                        (startX, endX) = (int(cX - (w * 0.15)), int(cX + (w * 0.15)))
+                        (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
+                        cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
+                        cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
+                        center_drone.allign(drone, cX, cY, w, h)
+
                         # detect qr
                         qr = qr_reader.read(gray)
                         match = re.search(r'P\.\d{2}', str(qr))
@@ -91,27 +100,37 @@ def detect(cam):
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
 
-                                print("landing")
-                                drone.land()
-                                sleep(3)
-                                cam.release()
-                                cv2.destroyAllWindows()
-                                break
-                                # qr_value += 1
+                                if 290 < cX < 350 and 140 < cY < 220:
+                                    print("QR is alligned")
+                                    drone.move_forward()
+                                    sleep(0.7)
+                                    drone.hover()
+                                if w > 105:
+                                    print("Drone is close to QR, moving through")
+                                    sleep(2)
+                                    drone.hover()
+                                    sleep(2)
+                                    drone.move_up()
+                                    sleep(1)
+                                    drone.hover()
+                                    sleep(1)
+                                    drone.move_forward()
+                                    sleep(1.3)
+                                    drone.hover()
+                                    sleep(1)
+                                    drone.move_down()
+                                    sleep(1)
+                                    drone.hover()
+                                    sleep(1)
+                                    qr_value -= 1
+                                    break
+
                             else:
                                 print 'Not correct QR'
 
                         else:
                             print 'rectangle is not a QR'
 
-                        # compute the center of the contour region and draw the crossbars
-                        M = cv2.moments(approx)
-                        (cX, cY) = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
-                        (startX, endX) = (int(cX - (w * 0.15)), int(cX + (w * 0.15)))
-                        (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
-                        cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
-                        cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
-                        center_drone.allign(drone, cX, cY, w, h)
 
         index += 1
 
