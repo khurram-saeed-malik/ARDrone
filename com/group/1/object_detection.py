@@ -11,7 +11,7 @@ drone = libardrone.ARDrone()
 
 def detect(cam):
     index = 1
-    qr_value = 4
+    qr_value = 2
     drone.takeoff()
     sleep(3)
     running = True
@@ -122,7 +122,7 @@ def detect(cam):
                                     sleep(1)
                                     drone.hover()
                                     sleep(1)
-                                    qr_value -= 1
+                                    qr_value += 1
                                     break
 
                             else:
@@ -130,7 +130,6 @@ def detect(cam):
 
                         else:
                             print 'rectangle is not a QR'
-
 
         index += 1
 
