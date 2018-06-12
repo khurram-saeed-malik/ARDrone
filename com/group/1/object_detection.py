@@ -38,10 +38,15 @@ def detect(cam):
             # error reading frame
             print 'error reading video feed'
 
-        if index % 30 == 0:
+        if index % 45 == 0:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            # cv2.imwrite("pic1_grascayle.png", gray)
+            # Hvad bruger vi dem til?:
             blurred = cv2.GaussianBlur(gray, (7, 7), 0)
+            # cv2.imwrite("pic2_blurred.png", blurred)
             edged = cv2.Canny(blurred, 50, 150)
+            # cv2.imwrite("pic3_edged.png", edged)
+            # print 'DONE TAKING IMAGES'
 
             (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
@@ -77,6 +82,8 @@ def detect(cam):
                         status = "Found square(s)"
                         rect_found = True
 
+
+
                         # todo move right or left | turn right or left | go down or up
 
                         # compute the center of the contour region and draw the crossbars
@@ -93,49 +100,15 @@ def detect(cam):
                         match = re.search(r'P\.\d{2}', str(qr))
                         if match:
                             # todo: logic for different qr codes
+                            # drone.land()
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
 
-                                if 280 < cX < 360 and 140 < cY < 220:
-                                    print("QR is alligned")
-                                    if w < 80:
-                                        drone.move_forward()
-                                        sleep(0.6)
-                                        drone.hover()
-                                        sleep(1)
-                                    elif 80 < w < 120:
-                                        drone.move_forward()
-                                        sleep(0.45)
-                                        drone.hover()
-                                        sleep(1)
-                                    elif 120 < w < 150:
-                                        drone.move_forward()
-                                        sleep(0.3)
-                                        drone.hover()
-                                        sleep(1)
-                                if w > 150:
-                                    print("Drone is close to QR, moving through")
-                                    sleep(2)
-                                    drone.hover()
-                                    sleep(2)
-                                    drone.move_up()
-                                    sleep(0.8)
-                                    drone.hover()
-                                    sleep(1)
-                                    drone.move_up()
-                                    sleep(0.5)
-                                    drone.hover()
-                                    sleep(2)
-                                    drone.move_forward()
-                                    sleep(1.3)
-                                    drone.hover()
-                                    sleep(1)
-                                    drone.move_down()
-                                    sleep(1)
-                                    drone.hover()
-                                    sleep(1)
-                                    qr_value += 1
-                                    break
+                                drone_movement.drone_adjust(cX, cY, w, drone)
+
+                                drone_movement.move_through_circle(w, drone_movement)
+
+                                qr_value +=1
 
                             else:
                                 print 'Not correct QR'
@@ -143,12 +116,12 @@ def detect(cam):
 
                         else:
                             print 'rectangle is not a QR'
+
                 else:
-                    print 'No rectangle found - searching, rectfound = ' + str(rect_found)
+                    print 'No rectangle found - searching, rect_found: ' + str(rect_found)
                     if not rect_found:
                         if index_two % 569 == 0:
-                            turn_right(drone)
-
+                            drone_movement.turn_right(drone)
                         index_two += 1
         index += 1
 
@@ -161,17 +134,6 @@ def detect(cam):
 
     cam.release()
     cv2.destroyAllWindows()
-
-
-def turn_right(dronie):
-    dronie.hover()
-    sleep(1)
-    dronie.turn_right()
-    sleep(0.3)
-    dronie.turn_left()
-    sleep(0.1)
-    dronie.hover()
-    sleep(1)
 
 
 class object_detection(object):
