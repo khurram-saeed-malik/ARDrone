@@ -78,7 +78,7 @@ def detect(cam):
                         cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
                         status = "Found square(s)"
 
-                        print(x, y, w, h)
+
 
                         # todo move right or left | turn right or left | go down or up
 
@@ -89,8 +89,8 @@ def detect(cam):
                         (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
                         cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
                         cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
-                        center_drone.allign(drone, cX, cY, w, h)
-
+                        center_drone.allign(drone, cX, cY, w)
+                        print(cX, cY, w)
                         # detect qr
                         qr = qr_reader.read(gray)
                         match = re.search(r'P\.\d{2}', str(qr))
@@ -100,20 +100,36 @@ def detect(cam):
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
 
-                                if 290 < cX < 350 and 140 < cY < 220:
+                                if 280 < cX < 360 and 140 < cY < 220:
                                     print("QR is alligned")
-                                    drone.move_forward()
-                                    sleep(0.7)
-                                    drone.hover()
-                                if w > 105:
+                                    if w < 80:
+                                        drone.move_forward()
+                                        sleep(0.6)
+                                        drone.hover()
+                                        sleep(1)
+                                    elif 80 < w < 120:
+                                        drone.move_forward()
+                                        sleep(0.45)
+                                        drone.hover()
+                                        sleep(1)
+                                    elif 120 < w < 150:
+                                        drone.move_forward()
+                                        sleep(0.3)
+                                        drone.hover()
+                                        sleep(1)
+                                if w > 150:
                                     print("Drone is close to QR, moving through")
                                     sleep(2)
                                     drone.hover()
                                     sleep(2)
                                     drone.move_up()
-                                    sleep(1)
+                                    sleep(0.8)
                                     drone.hover()
                                     sleep(1)
+                                    drone.move_up()
+                                    sleep(0.5)
+                                    drone.hover()
+                                    sleep(2)
                                     drone.move_forward()
                                     sleep(1.3)
                                     drone.hover()
