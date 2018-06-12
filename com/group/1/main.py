@@ -1,9 +1,6 @@
 # coding=utf-8
-from time import sleep
-import thread
 import cv2
 from lib import libardrone
-import capture
 import object_detection
 
 drone = libardrone.ARDrone()

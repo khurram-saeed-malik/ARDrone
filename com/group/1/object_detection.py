@@ -11,9 +11,12 @@ drone = libardrone.ARDrone()
 
 def detect(cam):
     index = 1
-    qr_value = 2
-    drone.takeoff()
-    sleep(3)
+    index_two = 1
+    qr_value = 4
+    rect_found = False
+    if not drone.takeoff():
+        drone.takeoff()
+        sleep(3)
     running = True
 
     while running:
@@ -35,15 +38,10 @@ def detect(cam):
             # error reading frame
             print 'error reading video feed'
 
-        if index % 45 == 0:
+        if index % 30 == 0:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            # cv2.imwrite("pic1_grascayle.png", gray)
-            # Hvad bruger vi dem til?:
             blurred = cv2.GaussianBlur(gray, (7, 7), 0)
-            # cv2.imwrite("pic2_blurred.png", blurred)
             edged = cv2.Canny(blurred, 50, 150)
-            # cv2.imwrite("pic3_edged.png", edged)
-            # print 'DONE TAKING IMAGES'
 
             (_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
@@ -77,8 +75,7 @@ def detect(cam):
                         # text
                         cv2.drawContours(frame, [approx], -1, (0, 0, 255), 4)
                         status = "Found square(s)"
-
-
+                        rect_found = True
 
                         # todo move right or left | turn right or left | go down or up
 
@@ -96,7 +93,6 @@ def detect(cam):
                         match = re.search(r'P\.\d{2}', str(qr))
                         if match:
                             # todo: logic for different qr codes
-                            # drone.land()
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
 
@@ -143,10 +139,17 @@ def detect(cam):
 
                             else:
                                 print 'Not correct QR'
+                                rect_found = False
 
                         else:
                             print 'rectangle is not a QR'
+                else:
+                    print 'No rectangle found - searching, rectfound = ' + str(rect_found)
+                    if not rect_found:
+                        if index_two % 569 == 0:
+                            turn_right(drone)
 
+                        index_two += 1
         index += 1
 
         # draw the status text on the frame
@@ -158,6 +161,17 @@ def detect(cam):
 
     cam.release()
     cv2.destroyAllWindows()
+
+
+def turn_right(dronie):
+    dronie.hover()
+    sleep(1)
+    dronie.turn_right()
+    sleep(0.3)
+    dronie.turn_left()
+    sleep(0.1)
+    dronie.hover()
+    sleep(1)
 
 
 class object_detection(object):
