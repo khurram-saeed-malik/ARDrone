@@ -5,6 +5,7 @@ import cv2
 import re
 import qr_reader
 import center_drone
+import drone_movement
 
 drone = libardrone.ARDrone()
 
@@ -106,7 +107,7 @@ def detect(cam):
 
                                 drone_movement.drone_adjust(cX, cY, w, drone)
 
-                                drone_movement.move_through_circle(w, drone_movement)
+                                drone_movement.move_through_circle(w, drone)
 
                                 qr_value +=1
 
