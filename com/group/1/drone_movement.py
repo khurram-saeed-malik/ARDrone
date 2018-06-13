@@ -24,7 +24,7 @@ def drone_adjust(cX, cY, w, drone):
 def move_through_circle(drone):
     print("Drone is close to QR, moving through")
     drone.move_up()
-    sleep(1.1)
+    sleep(1.3)
     drone.hover()
     sleep(0.5)
     drone.move_forward()

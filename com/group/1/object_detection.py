@@ -109,11 +109,11 @@ def detect(cam):
                                 if w >= 140:
                                     if 280 < cX < 360 and 140 < cY < 220:
                                         drone_movement.move_through_circle(drone)
-                                        qr_value -= 1
+                                        qr_value += 1
 
                             else:
                                 print 'Not correct QR'
-                                if index_qr_tries % 17 and qr_value > 5:
+                                if index_qr_tries % 17:
                                     rect_found = False
                                 index_qr_tries += 1
 
@@ -123,7 +123,7 @@ def detect(cam):
                 else:
                     if not rect_found:
                         print 'No rectangle found - searching, rect_found: ' + str(rect_found)
-                        if index_two % 569 == 0:
+                        if index_two % 569 == 0 and qr_value > 5:
                             drone_movement.turn_right(drone)
                         index_two += 1
         index += 1
