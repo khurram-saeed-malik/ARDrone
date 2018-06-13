@@ -14,7 +14,7 @@ def detect(cam):
     index = 1
     index_two = 1
     index_qr_tries = 1
-    qr_value = 4
+    qr_value = 3
     rect_found = False
     if not drone.takeoff():
         drone.takeoff()
@@ -34,10 +34,8 @@ def detect(cam):
                 print("landing")
                 drone.land()
                 sleep(3)
-                drone.reset()
                 cam.release()
                 cv2.destroyAllWindows()
-                exit(0)
                 break
         else:
             # error reading frame
@@ -98,7 +96,8 @@ def detect(cam):
                         cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
                         center_drone.allign(drone, cX, cY, w)
                         print(cX, cY, w)
-
+                        if 280 < cX < 360 and 140 < cY < 220:
+                            drone_movement.drone_adjust(cX, cY, w, drone)
                         # detect qr
                         qr = qr_reader.read(gray)
                         match = re.search(r'P\.\d{2}', str(qr))
@@ -107,11 +106,9 @@ def detect(cam):
                             # drone.land()
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
-                                if 280 < cX < 360 and 140 < cY < 220:
-                                    drone_movement.drone_adjust(cX, cY, w, drone)
-                                if w >= 150:
+                                if w >= 140:
                                     if 280 < cX < 360 and 140 < cY < 220:
-                                        drone_movement.move_through_circle(w, drone)
+                                        drone_movement.move_through_circle(drone)
                                         qr_value -= 1
 
                             else:

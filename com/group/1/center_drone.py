@@ -1,6 +1,5 @@
 # coding=utf-8
 from time import sleep
-from lib import libardrone
 
 
 def allign(drone, x, y, w):
@@ -10,15 +9,15 @@ def allign(drone, x, y, w):
         sleep(0.5)
         drone.hover()
         sleep(0.7)
-        #sleep(2)
+        # sleep(2)
 
     if x < 280 and 80 < w < 100:
         print("QR is right to the center and medium distance, moving left")
         drone.move_left()
-        sleep(0.4)
+        sleep(0.35)
         drone.hover()
         sleep(0.7)
-        #sleep(2)
+        # sleep(2)
 
     if x < 280 and 100 < w:
         print("QR is right to the center and close, moving left")
@@ -38,7 +37,7 @@ def allign(drone, x, y, w):
     if x > 340 and 80 < w < 100:
         print("QR is left to the center and medium distance, moving right")
         drone.move_right()
-        sleep(0.4)
+        sleep(0.35)
         drone.hover()
         sleep(0.7)
 
@@ -68,7 +67,6 @@ def allign(drone, x, y, w):
         drone.hover()
         sleep(0.5)
     #  sleep(2)
-
 
 
 class center_drone(object):
