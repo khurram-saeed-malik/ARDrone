@@ -1,23 +1,25 @@
 from time import sleep
 
+
 def drone_adjust(cX, cY, w, drone):
     # if 300 < cX < 340 and 140 < cY < 220:
-        print("QR is alligned")
-        if w < 80:
-            drone.move_forward()
-            sleep(0.6)
-            drone.hover()
-            sleep(1)
-        elif 80 < w < 120:
-            drone.move_forward()
-            sleep(0.45)
-            drone.hover()
-            sleep(1)
-        elif 120 < w < 150:
-            drone.move_forward()
-            sleep(0.3)
-            drone.hover()
-            sleep(1)
+    print("QR is alligned")
+    if w < 80:
+        drone.move_forward()
+        sleep(0.5)
+        drone.hover()
+        sleep(1)
+    if 80 < w < 120:
+        drone.move_forward()
+        sleep(0.4)
+        drone.hover()
+        sleep(1)
+    if 120 < w < 150:
+        drone.move_forward()
+        sleep(0.2)
+        drone.hover()
+        sleep(1)
+
 
 def move_through_circle(w, drone):
     if w > 150:
@@ -36,6 +38,7 @@ def move_through_circle(w, drone):
         sleep(1)
         drone.hover()
         sleep(1)
+
 
 def turn_right(drone):
     drone.hover()
