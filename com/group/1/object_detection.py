@@ -14,11 +14,11 @@ def detect(cam):
     index = 1
     index_two = 1
     index_qr_tries = 1
-    qr_value = 4
+    qr_value = 5
     rect_found = False
     if not drone.takeoff():
         drone.takeoff()
-        sleep(3)
+        sleep(5)
     running = True
 
     while running:
@@ -84,8 +84,6 @@ def detect(cam):
                         status = "Found square(s)"
                         rect_found = True
 
-
-
                         # todo move right or left | turn right or left | go down or up
 
                         # compute the center of the contour region and draw the crossbars
@@ -95,8 +93,8 @@ def detect(cam):
                         (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
                         cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
                         cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
+                        center_drone.allign(drone, cX, cY, w)
                         print(cX, cY, w)
-
 
                         # detect qr
                         qr = qr_reader.read(gray)
@@ -106,14 +104,13 @@ def detect(cam):
                             # drone.land()
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
+                                if 280 < cX < 360 and 140 < cY < 220:
+                                    drone_movement.drone_adjust(cX, cY, w, drone)
+                                if w > 150:
+                                    if 300 < cX < 340 and 160 < cY < 200:
+                                        drone_movement.move_through_circle(w, drone)
+                                        qr_value -= 1
 
-                                center_drone.allign(drone, cX, cY, w)
-
-                                drone_movement.drone_adjust(cX, cY, w, drone)
-
-                                drone_movement.move_through_circle(w, drone)
-
-                                qr_value +=1
 
                             else:
                                 print 'Not correct QR'
@@ -123,11 +120,10 @@ def detect(cam):
 
                         else:
                             print 'rectangle is not a QR'
-                            #drone_movement.turn_right(drone)
 
                 else:
-                    print 'No rectangle found - searching, rect_found: ' + str(rect_found)
                     if not rect_found:
+                        print 'No rectangle found - searching, rect_found: ' + str(rect_found)
                         if index_two % 569 == 0:
                             drone_movement.turn_right(drone)
                         index_two += 1
