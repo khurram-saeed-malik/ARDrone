@@ -14,7 +14,7 @@ def detect(cam):
     index = 1
     index_two = 1
     index_qr_tries = 1
-    qr_value = 3
+    qr_value = 0
     rect_found = False
     if not drone.takeoff():
         drone.takeoff()
@@ -94,7 +94,8 @@ def detect(cam):
                         (startY, endY) = (int(cY - (h * 0.15)), int(cY + (h * 0.15)))
                         cv2.line(frame, (startX, cY), (endX, cY), (0, 0, 255), 3)
                         cv2.line(frame, (cX, startY), (cX, endY), (0, 0, 255), 3)
-                        center_drone.allign(drone, cX, cY, w)
+                        if w > 28:
+                            center_drone.allign(drone, cX, cY, w)
                         print(cX, cY, w)
                         if 280 < cX < 360 and 140 < cY < 220:
                             drone_movement.drone_adjust(cX, cY, w, drone)
@@ -107,7 +108,7 @@ def detect(cam):
                             if qr == 'P.0' + repr(qr_value):
                                 print('Correct QR, value is P.0' + repr(qr_value))
                                 if w >= 140:
-                                    if 280 < cX < 360 and 140 < cY < 220:
+                                    if 275 < cX < 365 and 135 < cY < 225:
                                         drone_movement.move_through_circle(drone)
                                         qr_value += 1
 
@@ -123,7 +124,7 @@ def detect(cam):
                 else:
                     if not rect_found:
                         print 'No rectangle found - searching, rect_found: ' + str(rect_found)
-                        if index_two % 569 == 0 and qr_value > 5:
+                        if index_two % 569 == 0 and qr_value > 2:
                             drone_movement.turn_right(drone)
                         index_two += 1
         index += 1
