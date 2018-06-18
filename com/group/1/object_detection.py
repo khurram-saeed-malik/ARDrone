@@ -14,7 +14,7 @@ def detect(cam):
     index = 1
     index_two = 1
     index_qr_tries = 1
-    qr_value = 0
+    qr_value = 2
     rect_found = False
     if not drone.takeoff():
         drone.takeoff()
@@ -111,6 +111,9 @@ def detect(cam):
                                     if 285 < cX < 355 and 135 < cY < 225:
                                         drone_movement.move_through_circle(drone)
                                         qr_value += 1
+                                        if 0 < qr_value < 5:
+                                            drone_movement.turn_right(drone)
+
                                         if qr_value == 3:
                                             rect_found = False
 
