@@ -14,7 +14,7 @@ def detect(cam):
     index = 1
     index_two = 1
     index_qr_tries = 1
-    qr_value = 2
+    qr_value = 0
     rect_found = False
     if not drone.takeoff():
         drone.takeoff()
@@ -41,7 +41,7 @@ def detect(cam):
             # error reading frame
             print 'error reading video feed'
 
-        if index % 45 == 0:
+        if index % 31 == 0:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             # cv2.imwrite("pic1_grascayle.png", gray)
             # Hvad bruger vi dem til?:
@@ -117,6 +117,15 @@ def detect(cam):
                                         if qr_value == 3:
                                             rect_found = False
 
+                                        if qr_value == 5:
+                                            qr_value = 6
+
+                                        if qr_value == 7:
+                                            drone.move_right()
+                                            sleep(1)
+                                            drone.hover()
+                                            sleep(1)
+                                            drone.land()
                             else:
                                 print 'Not correct QR'
                                 if index_qr_tries % 7:
@@ -129,7 +138,7 @@ def detect(cam):
                 else:
                     if not rect_found:
                         print 'No rectangle found - searching, rect_found: ' + str(rect_found)
-                        if index_two % 569 == 0 and qr_value > 2:
+                        if index_two % 257 == 0 and qr_value == 3:
                             drone_movement.turn_right(drone)
                         index_two += 1
         index += 1
